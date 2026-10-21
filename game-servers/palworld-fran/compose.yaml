@@ -1,0 +1,45 @@
+name: palworld-fran
+
+services:
+  palworld:
+    image: thijsvanloef/palworld-server-docker:latest
+    container_name: palworld-server-fran
+    restart: unless-stopped
+    ports:
+      - "8212:8212/udp"
+      - "27016:27016/udp"
+    env_file:
+      - /srv/rotom/secrets/game-servers/palworld-fran.env
+    environment:
+      PUID: 995
+      PGID: 5001
+      TZ: "America/Los_Angeles"
+      MULTITHREADING: "true"
+      COMMUNITY: "false"
+      SERVER_NAME: "Fran's Palworld Server"
+      SERVER_DESCRIPTION: "Palworld Dedicated Server"
+      PORT: 8212
+      QUERY_PORT: 27016
+      PLAYERS: 16
+      BASE_CAMP_MAX_NUM_IN_GUILD: 10
+      BASE_CAMP_WORKER_MAX_NUM: 20
+      EXP_RATE: 5
+      PAL_EXP_RATE: 5
+      ALLOW_GLOBAL_PALBOX_EXPORT: "true"
+      ALLOW_GLOBAL_PALBOX_IMPORT: "true"
+      DEATH_PENALTY: "None"
+      COLLECTION_DROP_RATE: 5
+      ENEMY_DROP_ITEM_RATE: 5
+      WORK_SPEED_RATE: 5
+      ENABLE_INVADER_ENEMY: "false"
+      BACKUP_ENABLED: "true"
+      DELETE_OLD_BACKUPS: "true"
+      OLD_BACKUP_DAYS: 30
+      AUTO_UPDATE_ENABLED: "true"
+      AUTO_UPDATE_CRON_EXPRESSION: "0 2 * * *"
+      AUTO_UPDATE_WARN_MINUTES: 30
+      UPDATE_ON_BOOT: "true"
+      RCON_ENABLED: "true"
+    volumes:
+      - /srv/rotom/appdata/game-servers/palworld-fran:/palworld
+    stop_grace_period: 30s

@@ -1,0 +1,39 @@
+site_name: Rotom Support
+site_description: Private Runbook, architecture, and guides for the Rotom system
+docs_dir: /docs/docs
+site_dir: /site
+theme:
+  name: material
+  custom_dir: /docs/theme
+  language: en
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+  palette:
+    - scheme: slate
+      primary: deep purple
+      accent: purple
+extra:
+  generator: false
+nav:
+  - Rotom Support: index.md
+  - Runbook:
+      - Rotom Runbook: runbook/index.md
+      - 00 - Rotom Change Log: runbook/00-Rotom-Change-Log.md
+      - 01 - Rotom Server Inventory: runbook/01-Rotom-Server-Inventory.md
+      - 02 - Rotom Docker Services Inventory: runbook/02-Docker-Services.md
+      - 03 - Rotom Network and Domains: runbook/03-Network-and-Domains.md
+      - 04 - Rotom NAS and Storage Architecture: runbook/04-NAS-and-Storage.md
+      - 05 - Backup and Restore: runbook/05-Backup-and-Restore.md
+      - 06 - Maintenance and Automation: runbook/06-Maintenance-and-Automation.md
+      - 07 - Users and Permissions: runbook/07-Users-and-Permissions.md
+      - Rotom Directory Tree: runbook/08-Rotom-Directory-Tree.md
+  - Architecture:
+      - Rotom Architecture: architecture/index.md
+      - Rotom Architecture System: architecture/rotom-architecture-system.md
+  - Guides:
+      - Rotom Guides: guides/index.md
+      - PVE and Rotom Total-Loss Recovery: guides/pve-and-rotom-total-loss-recovery.md

@@ -1,0 +1,29 @@
+services:
+  docs:
+    image: nginx@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+    container_name: mkdocs-rr
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8082:80"
+    volumes:
+      - ${MKDOCS_RR_SITE_DIR:-/srv/rotom/appdata/platform/mkdocs-rr/site}:/usr/share/nginx/html:ro
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx
+      - /var/run
+
+  docs-build:
+    image: squidfunk/mkdocs-material@sha256:1a4e939cfd62b90943b6a829eb8544933e4e94eab18b8ca1d0f912fa9a532c37
+    profiles: ["build"]
+    command: build --clean --config-file /mkdocs.yml
+    volumes:
+      - ${MKDOCS_RR_SOURCE_DIR:-/srv/rotom/appdata/platform/mkdocs-rr/source}:/docs:ro
+      - ${MKDOCS_RR_SITE_DIR:-/srv/rotom/appdata/platform/mkdocs-rr/site}:/site
+      - /srv/rotom/stacks/platform/mkdocs-rr/mkdocs.yml:/mkdocs.yml:ro
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    network_mode: none

@@ -1,0 +1,14 @@
+services:
+  website:
+    image: nginx:alpine
+    container_name: jaredwines.com
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:7777:80"
+    volumes:
+      - /srv/rotom/appdata/hosted-websites/jaredwines.com:/usr/share/nginx/html:ro
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      default: {}
+

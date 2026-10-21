@@ -1,0 +1,46 @@
+services:
+  broker:
+    image: docker.io/valkey/valkey:9-alpine
+    container_name: paperless-broker
+    restart: unless-stopped
+    volumes:
+      - /srv/rotom/appdata/libraries/paperless/broker:/data
+
+  db:
+    image: docker.io/library/postgres:18
+    container_name: paperless-db
+    restart: unless-stopped
+    env_file:
+      - /srv/rotom/secrets/libraries/paperless/postgres.env
+    volumes:
+      - /srv/rotom/appdata/libraries/paperless/database:/var/lib/postgresql
+
+  webserver:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    container_name: paperless
+    restart: unless-stopped
+    depends_on:
+      - db
+      - broker
+    ports:
+      - "127.0.0.1:8000:8000"
+    env_file:
+      - /srv/rotom/secrets/libraries/paperless/paperless.env
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_DBHOST: db
+      PAPERLESS_DBENGINE: postgresql
+      USERMAP_UID: "127"
+      USERMAP_GID: "5000"
+    volumes:
+      - /srv/rotom/appdata/libraries/paperless/data:/usr/src/paperless/data
+      - type: bind
+        source: /mnt/nas-libraries/documents/paperless
+        target: /usr/src/paperless/media
+        bind:
+          create_host_path: false
+      - /srv/rotom/appdata/libraries/paperless/export:/usr/src/paperless/export
+      - /srv/rotom/appdata/libraries/paperless/consume:/usr/src/paperless/consume
+    networks:
+      default: {}
+

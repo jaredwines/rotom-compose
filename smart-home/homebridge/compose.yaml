@@ -1,0 +1,15 @@
+services:
+  homebridge:
+    image: homebridge/homebridge:latest
+    container_name: homebridge
+    restart: unless-stopped
+    network_mode: host
+    dns:
+      - 192.168.1.1
+    volumes:
+      - /srv/rotom/appdata/smart-home/homebridge:/homebridge
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"

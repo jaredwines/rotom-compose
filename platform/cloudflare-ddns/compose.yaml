@@ -1,0 +1,26 @@
+services:
+  cloudflare-ddns:
+    image: favonia/cloudflare-ddns:1
+    container_name: cloudflare-ddns
+    user: "997:5002"
+    restart: unless-stopped
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    dns:
+      - 192.168.1.1
+    environment:
+      CLOUDFLARE_API_TOKEN_FILE: /run/secrets/cloudflare_api_token
+      DOMAINS: rotom.casa
+      PROXIED: "false"
+      IP6_PROVIDER: none
+      UPDATE_CRON: "@every 1m"
+      UPDATE_ON_START: "true"
+    secrets:
+      - cloudflare_api_token
+
+secrets:
+  cloudflare_api_token:
+    file: /srv/rotom/secrets/platform/cloudflare_api_token.txt

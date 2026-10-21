@@ -1,0 +1,35 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "jaredwines.com:192.168.1.69"
+      - "rotom.casa:192.168.1.69"
+      - "nginx.rotom.casa:192.168.1.69"
+      - "arcane.rotom.casa:192.168.1.69"
+      - "home-assistant.rotom.casa:192.168.1.69"
+      - "homebridge.rotom.casa:192.168.1.69"
+    ports:
+      - "3001:3000"
+    env_file:
+      - /srv/rotom/secrets/platform/homepage.env
+    environment:
+      HOMEPAGE_ALLOWED_HOSTS: "rotom.casa,192.168.1.69:3001"
+      TZ: "America/Los_Angeles"
+      LOG_TARGETS: "stdout"
+    volumes:
+      - /srv/rotom/appdata/platform/homepage/config:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+  glances:
+    image: nicolargo/glances:latest-full
+    container_name: glances
+    restart: unless-stopped
+    pid: host
+    environment:
+      GLANCES_OPT: "-w -C /glances/conf/glances.conf"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /:/mnt/host-root:ro
+      - /srv/rotom/appdata/platform/homepage/glances/glances.conf:/glances/conf/glances.conf:ro

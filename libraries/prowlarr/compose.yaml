@@ -1,0 +1,19 @@
+services:
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    restart: unless-stopped
+    dns:
+      - 192.168.1.1
+    environment:
+      - PUID=127
+      - PGID=5000
+      - TZ=America/Los_Angeles
+      - UMASK=002
+    volumes:
+      - /srv/rotom/appdata/libraries/prowlarr/config:/config
+    ports:
+      - "9696:9696"
+    networks:
+      default: {}
+

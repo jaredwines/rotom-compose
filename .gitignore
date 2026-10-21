@@ -1,0 +1,8 @@
+# Credentials are external to this repository.
+.env
+.env.*
+*.env
+
+# Preserve only current configuration, not local historical copies.
+*.before-*
+*.pre-*

@@ -1,0 +1,12 @@
+services:
+  website:
+    image: php:8.4-apache
+    container_name: alohamillworks.com
+    restart: unless-stopped
+    ports:
+      - "7778:80"
+    volumes:
+      - /srv/rotom/appdata/hosted-websites/alohamillworks.com:/var/www/html:ro
+    networks:
+      default: {}
+

@@ -1,0 +1,66 @@
+services:
+  romm:
+    image: rommapp/romm@sha256:0d66b4ea152a237c7f24b95e87459f46d3c596a7c0b35a82f26bc971487278b3
+    container_name: romm
+    restart: unless-stopped
+    env_file:
+      - /srv/rotom/secrets/libraries/romm/romm.env
+      - /srv/rotom/secrets/libraries/romm/metadata.env
+    environment:
+      ROMM_DB_DRIVER: mariadb
+      DB_HOST: romm-db
+      DB_NAME: romm
+      DB_USER: romm
+      REDIS_HOST: romm-valkey
+      ENABLE_SCHEDULED_RESCAN: "true"
+      SCHEDULED_RESCAN_CRON: "7,22,37,52 * * * *"
+    volumes:
+      - /srv/rotom/appdata/libraries/romm/data:/romm
+      - /srv/rotom/appdata/libraries/romm/config:/romm/config
+      - /srv/rotom/appdata/libraries/romm/assets:/romm/assets
+      - /srv/rotom/appdata/libraries/romm/resources:/romm/resources
+      - /srv/rotom/appdata/libraries/romm/valkey:/redis-data
+      - /srv/rotom/appdata/libraries/romm/backup:/romm/backup
+      - type: bind
+        source: /mnt/nas-libraries/games
+        target: /romm/library
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /mnt/nas-libraries/games/roms
+        target: /romm/library/roms
+        read_only: false
+        bind:
+          create_host_path: false
+    networks:
+      default: {}
+    depends_on:
+      romm-db:
+        condition: service_healthy
+      romm-valkey:
+        condition: service_started
+    ports:
+      - "127.0.0.1:8081:8080"
+  romm-db:
+    image: mariadb@sha256:79d59758afc91b89b120b0a8904d637f5a3b3e1c4900f29b740d6d46c72fef68
+    container_name: romm-db
+    restart: unless-stopped
+    env_file:
+      - /srv/rotom/secrets/libraries/romm/mariadb.env
+    volumes:
+      - /srv/rotom/appdata/libraries/romm/database:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+  romm-valkey:
+    image: valkey/valkey@sha256:48332870af354a799964c0012ae1194a0bf2bf894eb508f945810596dc2d8d11
+    container_name: romm-valkey
+    restart: unless-stopped
+    command: valkey-server --appendonly yes
+    volumes:
+      - /srv/rotom/appdata/libraries/romm/valkey:/data
+      - /srv/rotom/appdata/libraries/romm/valkey:/redis-data

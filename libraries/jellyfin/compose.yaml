@@ -1,0 +1,35 @@
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+    environment:
+      - PUID=127
+      - PGID=5000
+      - TZ=America/Los_Angeles
+      - UMASK=002
+    volumes:
+      - /srv/rotom/appdata/libraries/jellyfin/config:/config
+      - type: bind
+        source: /mnt/nas-libraries/movies
+        target: /data/library/movies
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /mnt/nas-libraries/shows
+        target: /data/library/shows
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /mnt/nas-libraries/games
+        target: /data/library/games
+        read_only: true
+        bind:
+          create_host_path: false
+    ports:
+      - "8096:8096"
+    networks:
+      default: {}
+

@@ -1,0 +1,26 @@
+services:
+  arcane:
+    image: ghcr.io/getarcaneapp/manager:latest
+    container_name: arcane
+    restart: unless-stopped
+    ports:
+      - "3552:3552"
+    env_file:
+      - /srv/rotom/secrets/platform/arcane.env
+    environment:
+      APP_URL: https://arcane.rotom.casa
+      PUID: "997"
+      PGID: "5002"
+      TZ: America/Los_Angeles
+    cgroup: host
+    healthcheck:
+      test: ["CMD", "./arcane", "health", "--timeout", "2s"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 15s
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /srv/rotom/appdata/platform/arcane:/app/data
+      - /srv/rotom/secrets/platform:/srv/rotom/secrets/platform:ro
+
