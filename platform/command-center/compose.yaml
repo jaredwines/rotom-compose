@@ -1,0 +1,22 @@
+services:
+  command-center:
+    image: pinkpixeldev/command-center@sha256:6f31d2117647d1db593ea1cbd9f5cb9cf2128c93014faf23c77a746fb3d3df01
+    container_name: command-center
+    restart: unless-stopped
+    environment:
+      COMMAND_CENTER_PASSWORD_FILE: /run/secrets/command-center-password
+      TZ: America/Los_Angeles
+    ports:
+      - "127.0.0.1:8790:8787"
+    volumes:
+      - type: bind
+        source: /srv/rotom/appdata/platform/command-center
+        target: /var/lib/command-center
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /srv/rotom/secrets/platform/command-center/password
+        target: /run/secrets/command-center-password
+        read_only: true
+        bind:
+          create_host_path: false
