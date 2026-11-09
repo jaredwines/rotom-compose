@@ -1,0 +1,16 @@
+services:
+  sambee:
+    image: ghcr.io/helgeklein/sambee@sha256:6eba5da21ec64c4a0b9649645aaeae4f3f9d74d56787c2df5c67c019f8dac70e
+    container_name: sambee
+    user: "1000:1000"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "127.0.0.1:8010:8000"
+    volumes:
+      - type: bind
+        source: /srv/rotom/appdata/platform/sambee/data
+        target: /app/data
+        bind:
+          create_host_path: false
