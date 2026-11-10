@@ -14,3 +14,9 @@ services:
         target: /app/data
         bind:
           create_host_path: false
+      - type: bind
+        source: /srv/rotom/appdata/platform/sambee/overrides/api-DpbjD9iP.js
+        target: /app/static/assets/api-DpbjD9iP.js
+        read_only: true
+        bind:
+          create_host_path: false
